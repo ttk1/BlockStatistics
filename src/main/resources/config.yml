@@ -1,0 +1,7 @@
+DB:
+  type: sqlite
+  hostname:
+  database:
+  username:
+  password:
+  protect: true
