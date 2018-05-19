@@ -43,8 +43,12 @@ public class PlayerModel extends Model {
     }
 
     public static class PlayerFinder extends Finder<Long, PlayerModel>{
-        PlayerFinder(){
+        public PlayerFinder(){
             super(PlayerModel.class);
+        }
+
+        public PlayerFinder(String ebeanServerName){
+            super(PlayerModel.class, ebeanServerName);
         }
     }
 }

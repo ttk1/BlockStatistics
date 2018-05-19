@@ -1,6 +1,7 @@
 package net.ttk1.blockstatistics;
 
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import io.ebean.EbeanServer;
 import io.ebean.EbeanServerFactory;
 import io.ebean.annotation.TxIsolation;
@@ -22,11 +23,17 @@ import javax.inject.Provider;
 public class EbeanServerProvider implements Provider<EbeanServer> {
     private BlockStatistics plugin;
     private ConfigurationSection dbConfig;
+    private String ebeanServerName;
 
     @Inject
     private void setPlugin(BlockStatistics plugin) {
         this.plugin = plugin;
         this.dbConfig = plugin.getConfig().getConfigurationSection("DB");
+    }
+
+    @Inject
+    private void setEbeanServerName(@Named("ebeanServerName") String ebeanServerName) {
+        this.ebeanServerName = ebeanServerName;
     }
 
     @Override
@@ -61,7 +68,8 @@ public class EbeanServerProvider implements Provider<EbeanServer> {
         dataSourceConfig.setUsername(username);
         dataSourceConfig.setPassword(password);
 
-        serverConfig.setName(plugin.getDataFolder().getAbsolutePath()+"\\database");
+        serverConfig.setName(ebeanServerName);
+        serverConfig.setDefaultServer(false);
         serverConfig.setDataSourceConfig(dataSourceConfig);
         serverConfig.addPackage("net.ttk1.blockstatistics.model");
         serverConfig.setClassLoadConfig(new ClassLoadConfig(this.getClass().getClassLoader()));
@@ -69,8 +77,8 @@ public class EbeanServerProvider implements Provider<EbeanServer> {
         EbeanServer ebeanServer = EbeanServerFactory.createWithContextClassLoader(serverConfig, this.getClass().getClassLoader());
         try {
             // try to access database
-            PlayerModel.find.byId(1L);
-            BlockEventHistoryModel.find.byId(1L);
+            ebeanServer.find(PlayerModel.class).where().eq("id", 1L).findOne();
+            ebeanServer.find(BlockEventHistoryModel.class).where().eq("id", 1L).findOne();
         } catch (Exception e) {
             //TODO
             serverConfig.setDdlCreateOnly(dbConfig.getBoolean("protect", true));

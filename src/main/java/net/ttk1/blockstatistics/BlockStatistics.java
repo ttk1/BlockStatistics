@@ -4,7 +4,6 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import net.ttk1.blockstatistics.listener.BlockBreakEventListener;
 import net.ttk1.blockstatistics.listener.BlockPlaceEventListener;
-import net.ttk1.blockstatistics.model.BlockEventHistoryModel;
 import net.ttk1.blockstatistics.service.BlockEventHistoryService;
 import net.ttk1.blockstatistics.service.PlayerService;
 import org.bukkit.command.Command;

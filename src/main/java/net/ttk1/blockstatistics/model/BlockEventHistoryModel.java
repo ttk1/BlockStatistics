@@ -73,8 +73,12 @@ public class BlockEventHistoryModel extends Model {
     }
 
     public static class BlockEventHistoryFinder extends Finder<Long, BlockEventHistoryModel>{
-        BlockEventHistoryFinder(){
+        public BlockEventHistoryFinder(){
             super(BlockEventHistoryModel.class);
+        }
+
+        public BlockEventHistoryFinder(String ebeanServerName){
+            super(BlockEventHistoryModel.class, ebeanServerName);
         }
     }
 }

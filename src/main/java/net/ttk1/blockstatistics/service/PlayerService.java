@@ -2,23 +2,34 @@ package net.ttk1.blockstatistics.service;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import net.ttk1.blockstatistics.BlockStatistics;
 import net.ttk1.blockstatistics.model.PlayerModel;
+
+import static net.ttk1.blockstatistics.model.PlayerModel.PlayerFinder;
 
 import javax.persistence.PersistenceException;
 
 @Singleton
 public class PlayerService {
     private BlockStatistics plugin;
+    private String ebeanServerName;
+    private PlayerFinder playerFinder;
 
     @Inject
     private void setPlugin(BlockStatistics plugin) {
         this.plugin = plugin;
     }
 
+    @Inject
+    private void setEbeanServerName(@Named("ebeanServerName") String ebeanServerName) {
+        this.ebeanServerName = ebeanServerName;
+        playerFinder = new PlayerFinder(ebeanServerName);
+    }
+
     // 負の値が返ったら未登録
     public long getPlayerID(String playerUuid) {
-        PlayerModel player = PlayerModel.find.query().where().eq("uuid", playerUuid).findOne();
+        PlayerModel player = playerFinder.query().where().eq("uuid", playerUuid).findOne();
         if (player == null) {
             return -1;
         } else {
@@ -28,7 +39,7 @@ public class PlayerService {
 
     // nullが返ったら未登録
     public String getPlayerName(long playerId) {
-        PlayerModel player = PlayerModel.find.byId(playerId);
+        PlayerModel player = playerFinder.byId(playerId);
         if (player == null) {
             return null;
         } else {
@@ -38,7 +49,7 @@ public class PlayerService {
 
     // nullが返ったら未登録
     public String getPlayerUuid(long playerId) {
-        PlayerModel player = PlayerModel.find.byId(playerId);
+        PlayerModel player = playerFinder.byId(playerId);
         if (player == null) {
             return null;
         } else {
@@ -53,7 +64,7 @@ public class PlayerService {
 
         // uuidが重複したら例外が飛ぶ
         try {
-            player.save();
+            player.insert(ebeanServerName);
         } catch (PersistenceException e) {
             e.printStackTrace();
             return -1;
@@ -62,10 +73,10 @@ public class PlayerService {
     }
 
     public void updatePlayerName(long playerId, String playerName) {
-        PlayerModel player = PlayerModel.find.byId(playerId);
+        PlayerModel player = playerFinder.byId(playerId);
         if (player != null) {
             player.setName(playerName);
-            player.update();
+            player.update(ebeanServerName);
         }
     }
 }
