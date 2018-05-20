@@ -13,8 +13,6 @@ import javax.persistence.UniqueConstraint;
 @Entity
 @Table(name = "player", uniqueConstraints = { @UniqueConstraint(columnNames = {"uuid"}) })
 public class PlayerModel extends Model {
-    public static final PlayerFinder find = new PlayerFinder();
-
     @Id
     private long id;
     private String uuid;

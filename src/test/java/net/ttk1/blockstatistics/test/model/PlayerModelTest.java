@@ -4,12 +4,21 @@ import net.ttk1.blockstatistics.model.PlayerModel;
 import org.junit.Before;
 import org.junit.Test;
 
+import static net.ttk1.blockstatistics.model.PlayerModel.PlayerFinder;
+
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
 
 import javax.persistence.PersistenceException;
 
 public class PlayerModelTest {
+    private PlayerFinder playerFinder;
+
+    @Before
+    public void before() {
+        this.playerFinder = new PlayerFinder();
+    }
+
     @Test
     public void registerPlayerTest() {
         String TEST_PLAYER = "test_player";
@@ -20,7 +29,7 @@ public class PlayerModelTest {
         playerModel.setUuid(TEST_UUID);
         playerModel.save();
 
-        playerModel = PlayerModel.find.query().where().eq("uuid", TEST_UUID).findOne();
+        playerModel = playerFinder.query().where().eq("uuid", TEST_UUID).findOne();
         assertThat(playerModel.getName(), is(TEST_PLAYER));
         assertThat(playerModel.getUuid(), is(TEST_UUID));
     }

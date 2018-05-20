@@ -38,10 +38,20 @@ public class BlockEventHistoryService {
 
     // データの集計
     // TODO
-    public int countBreakBlocks(long playerId, int blockId, byte blockData) {
-        return blockEventHistoryFinder.query().where().eq("player_id", playerId)
-                .eq("type", 1)
+    // 期間の指定
+    private int countBlocks(long playerId, int type, int blockId, byte blockData) {
+        return blockEventHistoryFinder.query().where()
+                .eq("player_id", playerId)
+                .eq("type", type)
                 .eq("block_id", blockId)
                 .eq("block_data", blockData).findCount();
+    }
+
+    public int countBreakBlocks(long playerId, int blockId, byte blockData) {
+        return countBlocks(playerId, 1, blockId, blockData);
+    }
+
+    public int countPlaceBlocks(long playerId, int blockId, byte blockData) {
+        return countBlocks(playerId, 0, blockId, blockData);
     }
 }

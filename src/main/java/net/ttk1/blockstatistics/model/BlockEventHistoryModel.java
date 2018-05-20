@@ -12,8 +12,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "block_event_history")
 public class BlockEventHistoryModel extends Model {
-    public static final BlockEventHistoryFinder find = new BlockEventHistoryFinder();
-
     @Id
     private long id;
 
