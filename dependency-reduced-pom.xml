@@ -4,7 +4,7 @@
   <groupId>net.ttk1</groupId>
   <artifactId>BlockStatistics</artifactId>
   <name>BlockStatistics</name>
-  <version>0.0.0</version>
+  <version>0.0.0-snapshot</version>
   <build>
     <sourceDirectory>src/main/java</sourceDirectory>
     <defaultGoal>clean install</defaultGoal>

@@ -6,7 +6,7 @@
 
     <groupId>net.ttk1</groupId>
     <artifactId>BlockStatistics</artifactId>
-    <version>0.0.0</version>
+    <version>0.0.0-snapshot</version>
     <name>BlockStatistics</name>
 
     <properties>

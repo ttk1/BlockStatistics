@@ -6,6 +6,7 @@ import net.ttk1.blockstatistics.listener.BlockBreakEventListener;
 import net.ttk1.blockstatistics.listener.BlockPlaceEventListener;
 import net.ttk1.blockstatistics.service.BlockEventHistoryService;
 import net.ttk1.blockstatistics.service.PlayerService;
+import net.ttk1.blockstatistics.timer.TestTimer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.Configuration;
@@ -25,12 +26,19 @@ public class BlockStatistics extends JavaPlugin {
     private BlockBreakEventListener blockBreakEventListener;
     private BlockPlaceEventListener blockPlaceEventListener;
 
+    // timers
+    private TestTimer testTimer;
+
     // services
     private BlockEventHistoryService blockEventHistoryService;
     private PlayerService playerService;
 
     // command regex patterns
     private final Pattern commandPattern =  Pattern.compile("(\\d+):(\\d+)");
+
+    //
+    // listener
+    //
 
     @Inject
     private void setBlockPlaceEventListener(BlockPlaceEventListener blockPlaceEventListener) {
@@ -41,6 +49,19 @@ public class BlockStatistics extends JavaPlugin {
     private void setBlockBreakEventListener(BlockBreakEventListener blockBreakEventListener) {
         this.blockBreakEventListener = blockBreakEventListener;
     }
+
+    //
+    // timer
+    //
+
+    @Inject
+    private void setTestTimer(TestTimer testTimer) {
+        this.testTimer = testTimer;
+    }
+
+    //
+    // service
+    //
 
     @Inject
     private void setBlockEventHistoryService(BlockEventHistoryService blockEventHistoryService) {
@@ -57,27 +78,31 @@ public class BlockStatistics extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        ClassLoader currentClassLoader = Thread.currentThread().getContextClassLoader();
-        Thread.currentThread().setContextClassLoader(getClassLoader());
-
+        // ebean周りの都合のためクラスローダを一時的に書き換える
         {
+            ClassLoader currentClassLoader = Thread.currentThread().getContextClassLoader();
+            Thread.currentThread().setContextClassLoader(getClassLoader());
+
             // injector
             PluginModule module = new PluginModule(this);
             Injector injector = module.createInjector();
             injector.injectMembers(this);
 
-            // logger
-            logger = getLogger();
-
-            // config
-            initConfig();
-            //config = getConfig();
-
-            // listeners
-            registerListeners();
+            Thread.currentThread().setContextClassLoader(currentClassLoader);
         }
 
-        Thread.currentThread().setContextClassLoader(currentClassLoader);
+        // logger
+        logger = getLogger();
+
+        // config
+        initConfig();
+
+        // listeners
+        registerListeners();
+
+        // timer
+        startTimers();
+
         logger.info("BlockStatistics enabled");
     }
 
@@ -106,6 +131,10 @@ public class BlockStatistics extends JavaPlugin {
     private void registerListeners(){
         getServer().getPluginManager().registerEvents(blockBreakEventListener, this);
         getServer().getPluginManager().registerEvents(blockPlaceEventListener, this);
+    }
+
+    private void startTimers() {
+        testTimer.runTaskTimer(this, 100, 100);
     }
 
     @Override
