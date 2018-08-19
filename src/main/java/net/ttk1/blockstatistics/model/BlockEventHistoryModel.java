@@ -16,7 +16,7 @@ public class BlockEventHistoryModel extends Model {
     private long id;
 
     // 0: place event
-    // 1: bleak event
+    // 1: remove event
     private int type;
 
     private long time;

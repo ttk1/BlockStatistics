@@ -2,11 +2,16 @@ package net.ttk1.blockstatistics;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+
 import net.ttk1.blockstatistics.listener.BlockBreakEventListener;
 import net.ttk1.blockstatistics.listener.BlockPlaceEventListener;
+import net.ttk1.blockstatistics.listener.PlayerBucketEmptyEventListener;
+import net.ttk1.blockstatistics.listener.PlayerBucketFillEventListener;
+
 import net.ttk1.blockstatistics.service.BlockEventHistoryService;
 import net.ttk1.blockstatistics.service.PlayerService;
 import net.ttk1.blockstatistics.timer.TestTimer;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.Configuration;
@@ -25,6 +30,8 @@ public class BlockStatistics extends JavaPlugin {
     // event listeners
     private BlockBreakEventListener blockBreakEventListener;
     private BlockPlaceEventListener blockPlaceEventListener;
+    private PlayerBucketEmptyEventListener playerBucketEmptyEventListener;
+    private PlayerBucketFillEventListener playerBucketFillEventListener;
 
     // timers
     private TestTimer testTimer;
@@ -48,6 +55,16 @@ public class BlockStatistics extends JavaPlugin {
     @Inject
     private void setBlockBreakEventListener(BlockBreakEventListener blockBreakEventListener) {
         this.blockBreakEventListener = blockBreakEventListener;
+    }
+
+    @Inject
+    private void setPlayerBucketEmptyEventListener(PlayerBucketEmptyEventListener playerBucketEmptyEventListener) {
+        this.playerBucketEmptyEventListener = playerBucketEmptyEventListener;
+    }
+
+    @Inject
+    private void setPlayerBucketFillEventListener(PlayerBucketFillEventListener playerBucketFillEventListener) {
+        this.playerBucketFillEventListener = playerBucketFillEventListener;
     }
 
     //
@@ -101,7 +118,7 @@ public class BlockStatistics extends JavaPlugin {
         registerListeners();
 
         // timer
-        startTimers();
+        //startTimers();
 
         logger.info("BlockStatistics enabled");
     }
@@ -131,6 +148,8 @@ public class BlockStatistics extends JavaPlugin {
     private void registerListeners(){
         getServer().getPluginManager().registerEvents(blockBreakEventListener, this);
         getServer().getPluginManager().registerEvents(blockPlaceEventListener, this);
+        getServer().getPluginManager().registerEvents(playerBucketEmptyEventListener, this);
+        getServer().getPluginManager().registerEvents(playerBucketFillEventListener, this);
     }
 
     private void startTimers() {

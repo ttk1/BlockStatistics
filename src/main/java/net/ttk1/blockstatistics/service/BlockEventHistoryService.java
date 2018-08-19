@@ -3,12 +3,16 @@ package net.ttk1.blockstatistics.service;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+import javafx.scene.paint.Material;
 import net.ttk1.blockstatistics.BlockStatistics;
 import net.ttk1.blockstatistics.model.BlockEventHistoryModel;
 import static net.ttk1.blockstatistics.model.BlockEventHistoryModel.BlockEventHistoryFinder;
 
 @Singleton
 public class BlockEventHistoryService {
+    public static int RECORD_TYPE_PLACE = 0;
+    public static int RECORD_TYPE_REMOVE = 1;
+
     private BlockStatistics plugin;
     private String ebeanServerName;
     private BlockEventHistoryFinder blockEventHistoryFinder;
@@ -32,8 +36,13 @@ public class BlockEventHistoryService {
         record.setPlayerId(playerId);
         record.setBlockId(blockId);
         record.setBlockData(blockData);
-
         record.insert(ebeanServerName);
+
+        if (recordType == RECORD_TYPE_PLACE) {
+            plugin.getLogger().info("Place: " + org.bukkit.Material.getMaterial(blockId).toString());
+        } else {
+            plugin.getLogger().info("Remove: " + org.bukkit.Material.getMaterial(blockId).toString());
+        }
     }
 
     // データの集計

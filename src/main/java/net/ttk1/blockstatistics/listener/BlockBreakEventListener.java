@@ -36,6 +36,6 @@ public class BlockBreakEventListener implements Listener {
         String playerUuid = player.getUniqueId().toString();
         long playerId = playerService.getPlayerID(playerUuid);
 
-        blockEventHistoryService.registerRecord(1, playerId, block.getTypeId(), block.getData());
+        blockEventHistoryService.registerRecord(BlockEventHistoryService.RECORD_TYPE_REMOVE, playerId, block.getTypeId(), block.getData());
     }
 }

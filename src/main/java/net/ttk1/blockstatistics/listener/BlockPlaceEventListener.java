@@ -8,7 +8,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 /**
@@ -37,6 +36,6 @@ public class BlockPlaceEventListener implements Listener {
         String playerUuid = player.getUniqueId().toString();
         long playerId = playerService.getPlayerID(playerUuid);
 
-        blockEventHistoryService.registerRecord(0, playerId, block.getTypeId(), block.getData());
+        blockEventHistoryService.registerRecord(BlockEventHistoryService.RECORD_TYPE_PLACE, playerId, block.getTypeId(), block.getData());
     }
 }
