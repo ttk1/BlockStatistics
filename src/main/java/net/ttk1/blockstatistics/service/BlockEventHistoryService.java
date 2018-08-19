@@ -3,9 +3,10 @@ package net.ttk1.blockstatistics.service;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import javafx.scene.paint.Material;
 import net.ttk1.blockstatistics.BlockStatistics;
 import net.ttk1.blockstatistics.model.BlockEventHistoryModel;
+import org.bukkit.scheduler.BukkitRunnable;
+
 import static net.ttk1.blockstatistics.model.BlockEventHistoryModel.BlockEventHistoryFinder;
 
 @Singleton
@@ -30,13 +31,8 @@ public class BlockEventHistoryService {
 
     // レコードの登録
     public void registerRecord(int recordType, long playerId, int blockId, byte blockData) {
-        BlockEventHistoryModel record = new BlockEventHistoryModel();
-        record.setTime(System.currentTimeMillis());
-        record.setType(recordType);
-        record.setPlayerId(playerId);
-        record.setBlockId(blockId);
-        record.setBlockData(blockData);
-        record.insert(ebeanServerName);
+        RegisterRecordTask registerRecordTask = new RegisterRecordTask(recordType, playerId, blockId, blockData);
+        registerRecordTask.runTaskAsynchronously(plugin);
 
         if (recordType == RECORD_TYPE_PLACE) {
             plugin.getLogger().info("Place: " + org.bukkit.Material.getMaterial(blockId).toString());
@@ -62,5 +58,23 @@ public class BlockEventHistoryService {
 
     public int countPlaceBlocks(long playerId, int blockId, byte blockData) {
         return countBlocks(playerId, 0, blockId, blockData);
+    }
+
+    private class RegisterRecordTask extends BukkitRunnable {
+        private BlockEventHistoryModel record;
+
+        RegisterRecordTask(int recordType, long playerId, int blockId, byte blockData) {
+            record = new BlockEventHistoryModel();
+            record.setTime(System.currentTimeMillis());
+            record.setType(recordType);
+            record.setPlayerId(playerId);
+            record.setBlockId(blockId);
+            record.setBlockData(blockData);
+        }
+
+        @Override
+        public void run() {
+            record.insert(ebeanServerName);
+        }
     }
 }
