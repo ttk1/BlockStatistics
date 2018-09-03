@@ -4,18 +4,18 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import net.ttk1.blockstatistics.service.BlockEventHistoryService;
 import net.ttk1.blockstatistics.service.PlayerService;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerBucketEmptyEvent;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 
 /**
- * 水・マグマを設置するイベントを監視するクラス
+ * ブロックイベントを監視するクラス
  */
 @Singleton
-public class PlayerBucketEmptyEventListener implements Listener {
+public class BlockEventListener implements Listener {
     private PlayerService playerService;
     private BlockEventHistoryService blockEventHistoryService;
 
@@ -30,13 +30,24 @@ public class PlayerBucketEmptyEventListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerBucketEmptyEvent(PlayerBucketEmptyEvent event) {
+    public void onBlockBreakEventListener(BlockBreakEvent event) {
         Player player = event.getPlayer();
-        String playerUuid = player.getUniqueId().toString();
-        Material bucket = event.getBucket();
-        Block block = event.getBlockClicked();
+        Block block = event.getBlock();
 
+        String playerUuid = player.getUniqueId().toString();
         long playerId = playerService.getPlayerID(playerUuid);
+
+        blockEventHistoryService.registerRecord(playerId, block.getBlockData());
+    }
+
+    @EventHandler
+    public void onBlockPlaceEventListener(BlockPlaceEvent event) {
+        Player player = event.getPlayer();
+        Block block = event.getBlock();
+
+        String playerUuid = player.getUniqueId().toString();
+        long playerId = playerService.getPlayerID(playerUuid);
+
         blockEventHistoryService.registerRecord(playerId, block.getBlockData());
     }
 }

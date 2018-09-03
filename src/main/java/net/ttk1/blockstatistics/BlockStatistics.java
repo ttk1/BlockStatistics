@@ -3,10 +3,8 @@ package net.ttk1.blockstatistics;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
-import net.ttk1.blockstatistics.listener.BlockBreakEventListener;
-import net.ttk1.blockstatistics.listener.BlockPlaceEventListener;
-import net.ttk1.blockstatistics.listener.PlayerBucketEmptyEventListener;
-import net.ttk1.blockstatistics.listener.PlayerBucketFillEventListener;
+import net.ttk1.blockstatistics.listener.BlockEventListener;
+import net.ttk1.blockstatistics.listener.PlayerBucketEventListener;
 
 import net.ttk1.blockstatistics.service.BlockEventHistoryService;
 import net.ttk1.blockstatistics.service.PlayerService;
@@ -27,10 +25,8 @@ public class BlockStatistics extends JavaPlugin {
     private Configuration config;
 
     // event listeners
-    private BlockBreakEventListener blockBreakEventListener;
-    private BlockPlaceEventListener blockPlaceEventListener;
-    private PlayerBucketEmptyEventListener playerBucketEmptyEventListener;
-    private PlayerBucketFillEventListener playerBucketFillEventListener;
+    private BlockEventListener blockEventListener;
+    private PlayerBucketEventListener playerBucketEventListener;
 
     // services
     private BlockEventHistoryService blockEventHistoryService;
@@ -44,23 +40,13 @@ public class BlockStatistics extends JavaPlugin {
     //
 
     @Inject
-    private void setBlockPlaceEventListener(BlockPlaceEventListener blockPlaceEventListener) {
-        this.blockPlaceEventListener = blockPlaceEventListener;
+    private void setBlockEventListener(BlockEventListener blockEventListener) {
+        this.blockEventListener = blockEventListener;
     }
 
     @Inject
-    private void setBlockBreakEventListener(BlockBreakEventListener blockBreakEventListener) {
-        this.blockBreakEventListener = blockBreakEventListener;
-    }
-
-    @Inject
-    private void setPlayerBucketEmptyEventListener(PlayerBucketEmptyEventListener playerBucketEmptyEventListener) {
-        this.playerBucketEmptyEventListener = playerBucketEmptyEventListener;
-    }
-
-    @Inject
-    private void setPlayerBucketFillEventListener(PlayerBucketFillEventListener playerBucketFillEventListener) {
-        this.playerBucketFillEventListener = playerBucketFillEventListener;
+    private void setPlayerBucketEventListener(PlayerBucketEventListener playerBucketEventListener) {
+        this.playerBucketEventListener = playerBucketEventListener;
     }
 
     //
@@ -130,10 +116,8 @@ public class BlockStatistics extends JavaPlugin {
     }
 
     private void registerListeners(){
-        getServer().getPluginManager().registerEvents(blockBreakEventListener, this);
-        getServer().getPluginManager().registerEvents(blockPlaceEventListener, this);
-        getServer().getPluginManager().registerEvents(playerBucketEmptyEventListener, this);
-        getServer().getPluginManager().registerEvents(playerBucketFillEventListener, this);
+        getServer().getPluginManager().registerEvents(blockEventListener, this);
+        getServer().getPluginManager().registerEvents(playerBucketEventListener, this);
     }
 
     @Override
