@@ -10,7 +10,6 @@ import net.ttk1.blockstatistics.listener.PlayerBucketFillEventListener;
 
 import net.ttk1.blockstatistics.service.BlockEventHistoryService;
 import net.ttk1.blockstatistics.service.PlayerService;
-import net.ttk1.blockstatistics.timer.TestTimer;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -32,9 +31,6 @@ public class BlockStatistics extends JavaPlugin {
     private BlockPlaceEventListener blockPlaceEventListener;
     private PlayerBucketEmptyEventListener playerBucketEmptyEventListener;
     private PlayerBucketFillEventListener playerBucketFillEventListener;
-
-    // timers
-    private TestTimer testTimer;
 
     // services
     private BlockEventHistoryService blockEventHistoryService;
@@ -68,15 +64,6 @@ public class BlockStatistics extends JavaPlugin {
     }
 
     //
-    // timer
-    //
-
-    @Inject
-    private void setTestTimer(TestTimer testTimer) {
-        this.testTimer = testTimer;
-    }
-
-    //
     // service
     //
 
@@ -95,6 +82,9 @@ public class BlockStatistics extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        // config
+        initConfig();
+
         // ebean周りの都合のためクラスローダを一時的に書き換える
         {
             ClassLoader currentClassLoader = Thread.currentThread().getContextClassLoader();
@@ -111,14 +101,8 @@ public class BlockStatistics extends JavaPlugin {
         // logger
         logger = getLogger();
 
-        // config
-        initConfig();
-
         // listeners
         registerListeners();
-
-        // timer
-        //startTimers();
 
         logger.info("BlockStatistics enabled");
     }
@@ -152,10 +136,6 @@ public class BlockStatistics extends JavaPlugin {
         getServer().getPluginManager().registerEvents(playerBucketFillEventListener, this);
     }
 
-    private void startTimers() {
-        testTimer.runTaskTimer(this, 100, 100);
-    }
-
     @Override
     public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
         if (sender instanceof Player) {
@@ -175,8 +155,8 @@ public class BlockStatistics extends JavaPlugin {
                             // 実験用に草ブロックの破壊数を表示する
                             String playerUuid = ((Player) sender).getUniqueId().toString();
                             long playerId = playerService.getPlayerID(playerUuid);
-                            int count = blockEventHistoryService.countBreakBlocks(playerId, blockId, blockData);
-                            sender.sendMessage(String.valueOf(count));
+                            //int count = blockEventHistoryService.countBreakBlocks(playerId, blockId, blockData);
+                            //sender.sendMessage(String.valueOf(count));
                         } catch (Exception e) {
                             // TODO: デバッグ用, 後で取り除く
                             e.printStackTrace();

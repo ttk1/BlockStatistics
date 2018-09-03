@@ -35,17 +35,11 @@ public class PlayerBucketFillEventListener implements Listener {
     public void onPlayerBucketFillEvent(PlayerBucketFillEvent event) {
         Player player = event.getPlayer();
         Block block = event.getBlockClicked().getRelative(event.getBlockFace());
-        Material blockType = block.getType();
 
-        if (
-                blockType.equals(Material.WATER) ||
-                        blockType.equals(Material.STATIONARY_WATER) ||
-                        blockType.equals(Material.LAVA) ||
-                        blockType.equals(Material.STATIONARY_LAVA)
-                ) {
+        if (block.isLiquid()) {
             String playerUuid = player.getUniqueId().toString();
             long playerId = playerService.getPlayerID(playerUuid);
-            blockEventHistoryService.registerRecord(BlockEventHistoryService.RECORD_TYPE_REMOVE, playerId, block.getTypeId(), block.getData());
+            blockEventHistoryService.registerRecord(playerId, block.getBlockData());
         }
     }
 }

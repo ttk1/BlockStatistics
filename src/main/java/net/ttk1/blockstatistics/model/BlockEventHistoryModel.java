@@ -3,6 +3,7 @@ package net.ttk1.blockstatistics.model;
 import io.ebean.Finder;
 import io.ebean.Model;
 import io.ebean.annotation.Cache;
+import org.bukkit.block.data.BlockData;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -21,27 +22,18 @@ public class BlockEventHistoryModel extends Model {
 
     private long time;
     private long playerId;
-    private int blockId;
-    private byte blockData;
+    private BlockData blockData;
 
     // setter
     public void setTime(long time) {
         this.time = time;
     }
 
-    public void setType(int type) {
-        this.type = type;
-    }
-
     public void setPlayerId(long playerId) {
         this.playerId = playerId;
     }
 
-    public void setBlockId(int blockId) {
-        this.blockId = blockId;
-    }
-
-    public void setBlockData(byte blockData) {
+    public void setBlockData(BlockData blockData) {
         this.blockData = blockData;
     }
 
@@ -54,19 +46,11 @@ public class BlockEventHistoryModel extends Model {
         return time;
     }
 
-    public int getType() {
-        return type;
-    }
-
     public long getPlayerId() {
         return playerId;
     }
 
-    public int getBlockId() {
-        return blockId;
-    }
-
-    public byte getBlockData() {
+    public BlockData getBlockData() {
         return blockData;
     }
 

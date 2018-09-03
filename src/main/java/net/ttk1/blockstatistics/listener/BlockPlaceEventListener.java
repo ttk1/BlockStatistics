@@ -31,11 +31,11 @@ public class BlockPlaceEventListener implements Listener {
     @EventHandler
     public void onBlockPlaceEventListener(BlockPlaceEvent event) {
         Player player = event.getPlayer();
-        Block block = event.getBlockPlaced();
+        Block block = event.getBlock();
 
         String playerUuid = player.getUniqueId().toString();
         long playerId = playerService.getPlayerID(playerUuid);
 
-        blockEventHistoryService.registerRecord(BlockEventHistoryService.RECORD_TYPE_PLACE, playerId, block.getTypeId(), block.getData());
+        blockEventHistoryService.registerRecord(playerId, block.getBlockData());
     }
 }

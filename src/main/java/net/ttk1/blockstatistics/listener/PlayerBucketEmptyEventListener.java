@@ -32,18 +32,11 @@ public class PlayerBucketEmptyEventListener implements Listener {
     @EventHandler
     public void onPlayerBucketEmptyEvent(PlayerBucketEmptyEvent event) {
         Player player = event.getPlayer();
+        String playerUuid = player.getUniqueId().toString();
         Material bucket = event.getBucket();
+        Block block = event.getBlockClicked();
 
-        if (bucket.equals(Material.LAVA_BUCKET)|| bucket.equals(Material.WATER_BUCKET)) {
-            Block block = event.getBlockClicked();
-            String playerUuid = player.getUniqueId().toString();
-            long playerId = playerService.getPlayerID(playerUuid);
-
-            if (bucket.equals(Material.LAVA_BUCKET)) {
-                blockEventHistoryService.registerRecord(BlockEventHistoryService.RECORD_TYPE_PLACE, playerId, Material.LAVA.getId(), (byte) 0);
-            } else {
-                blockEventHistoryService.registerRecord(BlockEventHistoryService.RECORD_TYPE_PLACE, playerId, Material.WATER.getId(), (byte) 0);
-            }
-        }
+        long playerId = playerService.getPlayerID(playerUuid);
+        blockEventHistoryService.registerRecord(playerId, block.getBlockData());
     }
 }
