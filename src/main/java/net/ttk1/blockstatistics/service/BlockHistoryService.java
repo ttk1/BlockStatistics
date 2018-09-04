@@ -3,16 +3,15 @@ package net.ttk1.blockstatistics.service;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import jdk.nashorn.internal.ir.Block;
 import net.ttk1.blockstatistics.BlockStatistics;
-import net.ttk1.blockstatistics.model.BlockEventHistoryModel;
+import net.ttk1.blockstatistics.model.BlockHistoryModel;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import static net.ttk1.blockstatistics.model.BlockEventHistoryModel.BlockEventHistoryFinder;
+import static net.ttk1.blockstatistics.model.BlockHistoryModel.BlockEventHistoryFinder;
 
 @Singleton
-public class BlockEventHistoryService {
+public class BlockHistoryService {
     private BlockStatistics plugin;
     private String ebeanServerName;
     private BlockEventHistoryFinder blockEventHistoryFinder;
@@ -57,10 +56,10 @@ public class BlockEventHistoryService {
     */
 
     private class RegisterRecordTask extends BukkitRunnable {
-        private BlockEventHistoryModel record;
+        private BlockHistoryModel record;
 
         RegisterRecordTask(long playerId, BlockData blockData) {
-            record = new BlockEventHistoryModel();
+            record = new BlockHistoryModel();
             record.setTime(System.currentTimeMillis());
             record.setPlayerId(playerId);
             record.setBlockData(blockData);

@@ -7,7 +7,7 @@ import io.ebean.EbeanServerFactory;
 import io.ebean.annotation.TxIsolation;
 import io.ebean.config.ClassLoadConfig;
 import io.ebean.config.ServerConfig;
-import net.ttk1.blockstatistics.model.BlockEventHistoryModel;
+import net.ttk1.blockstatistics.model.BlockHistoryModel;
 import net.ttk1.blockstatistics.model.PlayerModel;
 import org.avaje.datasource.DataSourceConfig;
 
@@ -78,7 +78,7 @@ public class EbeanServerProvider implements Provider<EbeanServer> {
         try {
             // try to access database
             ebeanServer.find(PlayerModel.class).where().eq("id", 1L).findOne();
-            ebeanServer.find(BlockEventHistoryModel.class).where().eq("id", 1L).findOne();
+            ebeanServer.find(BlockHistoryModel.class).where().eq("id", 1L).findOne();
         } catch (Exception e) {
             //TODO
             serverConfig.setDdlCreateOnly(dbConfig.getBoolean("protect", true));

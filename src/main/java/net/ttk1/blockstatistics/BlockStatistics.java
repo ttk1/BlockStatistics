@@ -6,7 +6,7 @@ import com.google.inject.Injector;
 import net.ttk1.blockstatistics.listener.BlockEventListener;
 import net.ttk1.blockstatistics.listener.PlayerBucketEventListener;
 
-import net.ttk1.blockstatistics.service.BlockEventHistoryService;
+import net.ttk1.blockstatistics.service.BlockHistoryService;
 import net.ttk1.blockstatistics.service.PlayerService;
 
 import org.bukkit.command.Command;
@@ -29,7 +29,7 @@ public class BlockStatistics extends JavaPlugin {
     private PlayerBucketEventListener playerBucketEventListener;
 
     // services
-    private BlockEventHistoryService blockEventHistoryService;
+    private BlockHistoryService blockHistoryService;
     private PlayerService playerService;
 
     // command regex patterns
@@ -54,8 +54,8 @@ public class BlockStatistics extends JavaPlugin {
     //
 
     @Inject
-    private void setBlockEventHistoryService(BlockEventHistoryService blockEventHistoryService) {
-        this.blockEventHistoryService = blockEventHistoryService;
+    private void setBlockHistoryService(BlockHistoryService blockHistoryService) {
+        this.blockHistoryService = blockHistoryService;
     }
 
     @Inject
@@ -139,7 +139,7 @@ public class BlockStatistics extends JavaPlugin {
                             // 実験用に草ブロックの破壊数を表示する
                             String playerUuid = ((Player) sender).getUniqueId().toString();
                             long playerId = playerService.getPlayerID(playerUuid);
-                            //int count = blockEventHistoryService.countBreakBlocks(playerId, blockId, blockData);
+                            //int count = blockHistoryService.countBreakBlocks(playerId, blockId, blockData);
                             //sender.sendMessage(String.valueOf(count));
                         } catch (Exception e) {
                             // TODO: デバッグ用, 後で取り除く

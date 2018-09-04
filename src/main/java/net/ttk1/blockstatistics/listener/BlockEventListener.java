@@ -2,7 +2,7 @@ package net.ttk1.blockstatistics.listener;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import net.ttk1.blockstatistics.service.BlockEventHistoryService;
+import net.ttk1.blockstatistics.service.BlockHistoryService;
 import net.ttk1.blockstatistics.service.PlayerService;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -17,7 +17,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 @Singleton
 public class BlockEventListener implements Listener {
     private PlayerService playerService;
-    private BlockEventHistoryService blockEventHistoryService;
+    private BlockHistoryService blockHistoryService;
 
     @Inject
     private void setPlayerService(PlayerService playerService) {
@@ -25,8 +25,8 @@ public class BlockEventListener implements Listener {
     }
 
     @Inject
-    private void setBlockEventHistoryService(BlockEventHistoryService blockEventHistoryService) {
-        this.blockEventHistoryService = blockEventHistoryService;
+    private void setBlockHistoryService(BlockHistoryService blockHistoryService) {
+        this.blockHistoryService = blockHistoryService;
     }
 
     @EventHandler
@@ -37,7 +37,7 @@ public class BlockEventListener implements Listener {
         String playerUuid = player.getUniqueId().toString();
         long playerId = playerService.getPlayerID(playerUuid);
 
-        blockEventHistoryService.registerRecord(playerId, block.getBlockData());
+        blockHistoryService.registerRecord(playerId, block.getBlockData());
     }
 
     @EventHandler
@@ -48,6 +48,6 @@ public class BlockEventListener implements Listener {
         String playerUuid = player.getUniqueId().toString();
         long playerId = playerService.getPlayerID(playerUuid);
 
-        blockEventHistoryService.registerRecord(playerId, block.getBlockData());
+        blockHistoryService.registerRecord(playerId, block.getBlockData());
     }
 }

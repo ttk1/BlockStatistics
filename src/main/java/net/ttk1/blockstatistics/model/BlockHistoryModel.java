@@ -11,14 +11,10 @@ import javax.persistence.Table;
 
 @Cache
 @Entity
-@Table(name = "block_event_history")
-public class BlockEventHistoryModel extends Model {
+@Table(name = "block_history")
+public class BlockHistoryModel extends Model {
     @Id
     private long id;
-
-    // 0: place event
-    // 1: remove event
-    private int type;
 
     private long time;
     private long playerId;
@@ -54,13 +50,9 @@ public class BlockEventHistoryModel extends Model {
         return blockData;
     }
 
-    public static class BlockEventHistoryFinder extends Finder<Long, BlockEventHistoryModel>{
-        public BlockEventHistoryFinder(){
-            super(BlockEventHistoryModel.class);
-        }
-
+    public static class BlockEventHistoryFinder extends Finder<Long, BlockHistoryModel>{
         public BlockEventHistoryFinder(String ebeanServerName){
-            super(BlockEventHistoryModel.class, ebeanServerName);
+            super(BlockHistoryModel.class, ebeanServerName);
         }
     }
 }
