@@ -18,7 +18,7 @@ public class BlockHistoryModel extends Model {
 
     private long time;
     private long playerId;
-    private BlockData blockData;
+    private String blockDataString;
 
     // setter
     public void setTime(long time) {
@@ -29,8 +29,8 @@ public class BlockHistoryModel extends Model {
         this.playerId = playerId;
     }
 
-    public void setBlockData(BlockData blockData) {
-        this.blockData = blockData;
+    public void setBlockData(String blockDataString) {
+        this.blockDataString = blockDataString;
     }
 
     // getter
@@ -46,8 +46,8 @@ public class BlockHistoryModel extends Model {
         return playerId;
     }
 
-    public BlockData getBlockData() {
-        return blockData;
+    public String getBlockDataString() {
+        return blockDataString;
     }
 
     public static class BlockEventHistoryFinder extends Finder<Long, BlockHistoryModel>{

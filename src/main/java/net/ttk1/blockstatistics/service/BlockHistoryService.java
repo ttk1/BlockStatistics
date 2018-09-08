@@ -62,7 +62,7 @@ public class BlockHistoryService {
             record = new BlockHistoryModel();
             record.setTime(System.currentTimeMillis());
             record.setPlayerId(playerId);
-            record.setBlockData(blockData);
+            record.setBlockData(blockData.getAsString());
         }
 
         @Override
