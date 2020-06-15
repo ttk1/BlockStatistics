@@ -16,7 +16,7 @@ public class PlayerModelTest {
 
     @Before
     public void before() {
-        this.playerFinder = new PlayerFinder();
+        this.playerFinder = new PlayerFinder("db");
     }
 
     @Test

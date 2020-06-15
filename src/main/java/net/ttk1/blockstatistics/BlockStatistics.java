@@ -3,14 +3,11 @@ package net.ttk1.blockstatistics;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
-import net.ttk1.blockstatistics.listener.BlockBreakEventListener;
-import net.ttk1.blockstatistics.listener.BlockPlaceEventListener;
-import net.ttk1.blockstatistics.listener.PlayerBucketEmptyEventListener;
-import net.ttk1.blockstatistics.listener.PlayerBucketFillEventListener;
+import net.ttk1.blockstatistics.listener.BlockEventListener;
+import net.ttk1.blockstatistics.listener.PlayerBucketEventListener;
 
-import net.ttk1.blockstatistics.service.BlockEventHistoryService;
+import net.ttk1.blockstatistics.service.BlockHistoryService;
 import net.ttk1.blockstatistics.service.PlayerService;
-import net.ttk1.blockstatistics.timer.TestTimer;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -28,16 +25,11 @@ public class BlockStatistics extends JavaPlugin {
     private Configuration config;
 
     // event listeners
-    private BlockBreakEventListener blockBreakEventListener;
-    private BlockPlaceEventListener blockPlaceEventListener;
-    private PlayerBucketEmptyEventListener playerBucketEmptyEventListener;
-    private PlayerBucketFillEventListener playerBucketFillEventListener;
-
-    // timers
-    private TestTimer testTimer;
+    private BlockEventListener blockEventListener;
+    private PlayerBucketEventListener playerBucketEventListener;
 
     // services
-    private BlockEventHistoryService blockEventHistoryService;
+    private BlockHistoryService blockHistoryService;
     private PlayerService playerService;
 
     // command regex patterns
@@ -48,32 +40,13 @@ public class BlockStatistics extends JavaPlugin {
     //
 
     @Inject
-    private void setBlockPlaceEventListener(BlockPlaceEventListener blockPlaceEventListener) {
-        this.blockPlaceEventListener = blockPlaceEventListener;
+    private void setBlockEventListener(BlockEventListener blockEventListener) {
+        this.blockEventListener = blockEventListener;
     }
 
     @Inject
-    private void setBlockBreakEventListener(BlockBreakEventListener blockBreakEventListener) {
-        this.blockBreakEventListener = blockBreakEventListener;
-    }
-
-    @Inject
-    private void setPlayerBucketEmptyEventListener(PlayerBucketEmptyEventListener playerBucketEmptyEventListener) {
-        this.playerBucketEmptyEventListener = playerBucketEmptyEventListener;
-    }
-
-    @Inject
-    private void setPlayerBucketFillEventListener(PlayerBucketFillEventListener playerBucketFillEventListener) {
-        this.playerBucketFillEventListener = playerBucketFillEventListener;
-    }
-
-    //
-    // timer
-    //
-
-    @Inject
-    private void setTestTimer(TestTimer testTimer) {
-        this.testTimer = testTimer;
+    private void setPlayerBucketEventListener(PlayerBucketEventListener playerBucketEventListener) {
+        this.playerBucketEventListener = playerBucketEventListener;
     }
 
     //
@@ -81,8 +54,8 @@ public class BlockStatistics extends JavaPlugin {
     //
 
     @Inject
-    private void setBlockEventHistoryService(BlockEventHistoryService blockEventHistoryService) {
-        this.blockEventHistoryService = blockEventHistoryService;
+    private void setBlockHistoryService(BlockHistoryService blockHistoryService) {
+        this.blockHistoryService = blockHistoryService;
     }
 
     @Inject
@@ -95,6 +68,9 @@ public class BlockStatistics extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        // config
+        initConfig();
+
         // ebean周りの都合のためクラスローダを一時的に書き換える
         {
             ClassLoader currentClassLoader = Thread.currentThread().getContextClassLoader();
@@ -111,14 +87,8 @@ public class BlockStatistics extends JavaPlugin {
         // logger
         logger = getLogger();
 
-        // config
-        initConfig();
-
         // listeners
         registerListeners();
-
-        // timer
-        //startTimers();
 
         logger.info("BlockStatistics enabled");
     }
@@ -146,14 +116,8 @@ public class BlockStatistics extends JavaPlugin {
     }
 
     private void registerListeners(){
-        getServer().getPluginManager().registerEvents(blockBreakEventListener, this);
-        getServer().getPluginManager().registerEvents(blockPlaceEventListener, this);
-        getServer().getPluginManager().registerEvents(playerBucketEmptyEventListener, this);
-        getServer().getPluginManager().registerEvents(playerBucketFillEventListener, this);
-    }
-
-    private void startTimers() {
-        testTimer.runTaskTimer(this, 100, 100);
+        getServer().getPluginManager().registerEvents(blockEventListener, this);
+        getServer().getPluginManager().registerEvents(playerBucketEventListener, this);
     }
 
     @Override
@@ -175,8 +139,8 @@ public class BlockStatistics extends JavaPlugin {
                             // 実験用に草ブロックの破壊数を表示する
                             String playerUuid = ((Player) sender).getUniqueId().toString();
                             long playerId = playerService.getPlayerID(playerUuid);
-                            int count = blockEventHistoryService.countBreakBlocks(playerId, blockId, blockData);
-                            sender.sendMessage(String.valueOf(count));
+                            //int count = blockHistoryService.countBreakBlocks(playerId, blockId, blockData);
+                            //sender.sendMessage(String.valueOf(count));
                         } catch (Exception e) {
                             // TODO: デバッグ用, 後で取り除く
                             e.printStackTrace();
